@@ -1,0 +1,77 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>GiphyTastic</title>
+</head>
+
+<body>
+  <button data-person="Lionel Messi">Lionel Messi</button>
+  <button data-person="Neymar Jr">Neymar Jr</button>
+
+  <button data-person="Cristiano Ronaldo">CR7</button>
+  <button data-person="Marco Reus">Marco Reus</button>
+  <button data-person="Giovanni Dos Santos">Giovanni Dos Santos</button>
+  <button data-person="Javier Hernandez">Chicharito Hernandez</button>
+  <button data-person="Eden Hazard">Eden Hazard</button>
+  <button data-person="Mesut Ozil">Mesut Ozil</button>
+  <button data-person="Andres Iniesta">Andres Iniesta</button>
+
+  <div class="col-sm-4">
+    <form id="form">
+        <label for="player-input">Add a Professional Football Player</label><br>
+        <input type="text" id="player-input">
+        <input id="add-player" type="submit" value="Submit">
+    </form>
+</div>
+  
+
+  <div id="gifs-appear-here">
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script type="text/javascript">
+    $("button").on("click", function() {
+      var person = $(this).attr("data-person");
+      var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
+        person + "&api_key=dc6zaTOxFJmzC&limit=10";
+
+      $.ajax({
+        url: queryURL,
+        method: "GET"
+      })
+        .then(function(response) {
+        
+          var results = response.data;
+
+          for (var i = 0; i < results.length; i++) {
+
+            if (results[i].rating !== "r" && results[i].rating !== "pg-13") {
+            
+              var gifDiv = $("<div>");
+
+             
+              var rating = results[i].rating;
+
+              
+              var p = $("<p>").text("Rating: " + rating);
+
+              
+              var personImage = $("<img>");
+
+              personImage.attr("src", results[i].images.fixed_height.url);
+
+             
+              gifDiv.append(p);
+              gifDiv.append(personImage);
+
+              $("#gifs-appear-here").prepend(gifDiv);
+            }
+          }
+        });
+    });
+  </script>
+</body>
+
+</html>
